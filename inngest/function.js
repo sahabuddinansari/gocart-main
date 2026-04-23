@@ -1,6 +1,6 @@
 import { inngest } from './client'
 
-// ✅ Dynamic Prisma import (IMPORTANT)
+// ✅ dynamic import
 let prisma;
 
 async function getPrisma() {
@@ -11,7 +11,7 @@ async function getPrisma() {
   return prisma;
 }
 
-// ✅ CREATE
+// CREATE
 export const syncUserCreation = inngest.createFunction(
   { id: "sync-user-create" },
   { event: "clerk/user.created" },
@@ -31,7 +31,7 @@ export const syncUserCreation = inngest.createFunction(
   }
 );
 
-// ✅ UPDATE
+// UPDATE
 export const syncUserUpdate = inngest.createFunction(
   { id: "sync-user-update" },
   { event: "clerk/user.updated" },
@@ -41,9 +41,7 @@ export const syncUserUpdate = inngest.createFunction(
     const prisma = await getPrisma();
 
     await prisma.user.update({
-      where: {
-        id: data.id,
-      },
+      where: { id: data.id },
       data: {
         email: data.email_addresses?.[0]?.email_address || "",
         name: `${data.first_name || ""} ${data.last_name || ""}`,
@@ -53,7 +51,7 @@ export const syncUserUpdate = inngest.createFunction(
   }
 );
 
-// ✅ DELETE
+// DELETE
 export const syncUserDeletion = inngest.createFunction(
   { id: "sync-user-delete" },
   { event: "clerk/user.deleted" },
@@ -63,9 +61,7 @@ export const syncUserDeletion = inngest.createFunction(
     const prisma = await getPrisma();
 
     await prisma.user.deleteMany({
-      where: {
-        id: data.id,
-      },
+      where: { id: data.id },
     });
   }
 );
