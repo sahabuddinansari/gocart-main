@@ -1,7 +1,17 @@
 import { inngest } from './client'
-import prisma from '../lib/prisma'
 
-// inngest function to save user data to database
+// ✅ Dynamic Prisma import (IMPORTANT)
+let prisma;
+
+async function getPrisma() {
+  if (!prisma) {
+    const module = await import('../lib/prisma');
+    prisma = module.default;
+  }
+  return prisma;
+}
+
+// ✅ CREATE
 export const syncUserCreation = inngest.createFunction(
   { id: "sync-user-create" },
   { event: "clerk/user.created" },
@@ -20,48 +30,42 @@ export const syncUserCreation = inngest.createFunction(
     });
   }
 );
-// Inngest Function to update user data in database
 
-import { inngest } from './client'
-import prisma from '../lib/prisma'
-
-// inngest function to update user data in database
-
+// ✅ UPDATE
 export const syncUserUpdate = inngest.createFunction(
-  { id: 'sync-user-update' },
-  { event: 'clerk/user.updated' },
+  { id: "sync-user-update" },
+  { event: "clerk/user.updated" },
   async ({ event }) => {
-    const { data } = event
+    const { data } = event;
+
+    const prisma = await getPrisma();
 
     await prisma.user.update({
       where: {
         id: data.id,
       },
       data: {
-        email: data.email_addresses[0].email_address || "",
+        email: data.email_addresses?.[0]?.email_address || "",
         name: `${data.first_name || ""} ${data.last_name || ""}`,
         image: data.image_url,
       },
-    })
+    });
   }
-)
+);
 
-//  delete function
-import { inngest } from './client'
-import prisma from '../lib/prisma'
-
-// inngest function to delete user from database
-
+// ✅ DELETE
 export const syncUserDeletion = inngest.createFunction(
-  { id: 'sync-user-delete' },
-  { event: 'clerk/user.deleted' },
+  { id: "sync-user-delete" },
+  { event: "clerk/user.deleted" },
   async ({ event }) => {
-    const { data } = event
+    const { data } = event;
 
-    await prisma.user.delete({
+    const prisma = await getPrisma();
+
+    await prisma.user.deleteMany({
       where: {
         id: data.id,
       },
-    })
+    });
   }
-)
+);
