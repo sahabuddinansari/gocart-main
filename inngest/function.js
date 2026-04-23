@@ -1,5 +1,5 @@
 import { inngest } from './client'
-import prisma from '@/lib/prisma'
+import prisma from '../lib/prisma'
 
 // inngest function to save user data to database
 export const syncUserCreation = inngest.createFunction(
@@ -22,7 +22,7 @@ export const syncUserCreation = inngest.createFunction(
 // Inngest Function to update user data in database
 
 import { inngest } from './client'
-import prisma from '@/lib/prisma'
+import prisma from '../lib/prisma'
 
 // inngest function to update user data in database
 
@@ -50,7 +50,7 @@ export const syncUserUpdate = inngest.createFunction(
 
 
 import { inngest } from './client'
-import prisma from '@/lib/prisma'
+import prisma from '../lib/prisma'
 
 // inngest function to delete user from database
 
