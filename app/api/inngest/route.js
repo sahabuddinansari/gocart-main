@@ -4,8 +4,8 @@ import { serve } from "inngest/next";
 import { inngest } from "../../../inngest/client";
 import {
   syncUserCreation,
-  syncUserDeletion,
-  syncUserUpdate
+  syncUserUpdate,
+  syncUserDeletion
 } from "../../../inngest/function";
 
 export const { GET, POST, PUT } = serve({

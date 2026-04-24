@@ -1,6 +1,6 @@
 import { inngest } from './client'
 
-// ✅ dynamic import
+// dynamic prisma
 let prisma;
 
 async function getPrisma() {
@@ -11,14 +11,12 @@ async function getPrisma() {
   return prisma;
 }
 
-// CREATE
 export const syncUserCreation = inngest.createFunction(
   { id: "sync-user-create" },
   { event: "clerk/user.created" },
   async ({ event }) => {
-    const { data } = event;
-
     const prisma = await getPrisma();
+    const { data } = event;
 
     await prisma.user.create({
       data: {
@@ -31,14 +29,12 @@ export const syncUserCreation = inngest.createFunction(
   }
 );
 
-// UPDATE
 export const syncUserUpdate = inngest.createFunction(
   { id: "sync-user-update" },
   { event: "clerk/user.updated" },
   async ({ event }) => {
-    const { data } = event;
-
     const prisma = await getPrisma();
+    const { data } = event;
 
     await prisma.user.update({
       where: { id: data.id },
@@ -51,14 +47,12 @@ export const syncUserUpdate = inngest.createFunction(
   }
 );
 
-// DELETE
 export const syncUserDeletion = inngest.createFunction(
   { id: "sync-user-delete" },
   { event: "clerk/user.deleted" },
   async ({ event }) => {
-    const { data } = event;
-
     const prisma = await getPrisma();
+    const { data } = event;
 
     await prisma.user.deleteMany({
       where: { id: data.id },
